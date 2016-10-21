@@ -26,6 +26,7 @@ class Wizard extends Component {
         this.setState(
             { isModalDialogOpen: false }
         )
+        this.props.onClose()
     }
     moveBack() {
         if(this.state.activeStep > 0){

@@ -5,6 +5,7 @@ var helpers = {
 createGdeployConfig: function(glusterModel, filePath){
    
    //TODO - Need a better way to create the gdeploy config files
+   this.configString = ""
     this.appendLine('[hosts]')
     glusterModel.hosts.forEach(function(host) {
        this.appendLine(host)

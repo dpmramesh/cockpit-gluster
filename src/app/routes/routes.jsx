@@ -1,7 +1,6 @@
 import React from 'react'
 import App from '../components/App.jsx'
 import Dashboard from '../components/Dashboard.jsx'
-import GdeploySetup from '../components/GdeploySetup.jsx'
 
 let root = {
   path: '/',
@@ -19,12 +18,6 @@ export let paths = {
         component: Dashboard,
         indexRoute: true
         
-    },
-    "Gdeploy": {
-        path: "/gdeploy",
-        icon: "fa-cubes",
-        component: GdeploySetup,
-        indexRoute: true
     }
 }
 

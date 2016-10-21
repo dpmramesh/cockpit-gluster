@@ -4,7 +4,6 @@ import WizardPackageStep from './Gdeploy-Wizard-Packages.jsx'
 import WizardVolumesStep from './Gdeploy-Wizard-Volumes.jsx'
 import WizardBricksStep from './Gdeploy-Wizard-Bricks.jsx'
 import WizardPreviewStep from './Gdeploy-Wizard-Preview.jsx'
-import WizardExecutionStep from './Gdeploy-Wizard-Execution.jsx'
 var gdeployConfigUtil = require('../utils/gdeployConfigUtil');
 import Wizard from './Wizard.jsx'
 
@@ -12,43 +11,46 @@ class GdeploySetup extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            hosts: ["", "", ""],
-            additionalRepos: "",
-            additionalPackages: "",
-            gdeployConfig: ""
+            glusterModel: {
+                hosts: ["10.70.41.161", "10.70.41.245", "10.70.43.128"],
+                repos: "http://resources.ovirt.org/pub/ovirt-master-snapshot-static/rpm/el7Server/,http://resources.ovirt.org/pub/ovirt-master-snapshot/rpm/el7Server/,http://mirror.centos.org/centos/7/storage/x86_64/gluster-3.8/",
+                packages: "vdsm,vdsm-gluster,ovirt-hosted-engine-setup,screen,gluster-nagios-addons,xauth",
+            },
+            isDeploymentStarted: false
         };
         this.handleUpdateHosts = this.handleUpdateHosts.bind(this)
         this.handleUpdatePackages = this.handleUpdatePackages.bind(this)
         this.handleFinish = this.handleFinish.bind(this)
     }
     handleUpdateHosts(hosts){
+        var glusterModel = this.state.glusterModel
+        glusterModel.hosts = hosts
         this.setState(
-            {hosts: hosts}
+            {glusterModel: glusterModel}
         )
     }
     handleUpdatePackages(additionalRepos, additionalPackages){
-        this.setState({
-            additionalRepos: additionalRepos,
-            additionalPackages: additionalPackages
-        })
+        var glusterModel = this.state.glusterModel
+        glusterModel.repos = additionalRepos
+        glusterModel.packages = additionalPackages
+        this.setState(
+            {glusterModel: glusterModel}
+        )
     }
     handleFinish() {
-         var gdeployConfig = gdeployConfigUtil.createGdeployConfig(glusterModel, '/tmp/gdeployConfig.conf')
-         this.setState(
-             {gdeployConfig: gdeployConfig}
-         )
-         //TODO - Need to create answers file hosted-engine deployment
-         //TODO - Start gdeploy execution immediatly after the config file creation
+        this.setState(
+            {isDeploymentStarted: true}
+        )
     }
     render() {
         var steps = ['Hosts', 'Packages', 'Volumes', 'Bricks', 'Review'];
         return(
-            <Wizard title="Gluster Deployment using Gdeploy" steps={steps} onFinish={this.handleFinish}>
-                <WizardHostStep hosts={this.state.hosts} onupdateHosts={this.handleUpdateHosts}/>
-                <WizardPackageStep additionalRepos={this.state.additionalRepos} additionalPackages={this.state.additionalPackages} onUpdatePackages={this.handleUpdatePackages}/>
+            <Wizard title="Gluster Deployment using Gdeploy" onClose={this.props.onClose} steps={steps} onFinish={this.handleFinish}>
+                <WizardHostStep hosts={this.state.glusterModel.hosts} onupdateHosts={this.handleUpdateHosts}/>
+                <WizardPackageStep additionalRepos={this.state.glusterModel.repos} additionalPackages={this.state.glusterModel.packages} onUpdatePackages={this.handleUpdatePackages}/>
                 <WizardVolumesStep/>
                 <WizardBricksStep/>
-                <WizardPreviewStep gdeployConfig={this.state.gdeployConfig}/>
+                <WizardPreviewStep glusterModel={this.state.glusterModel} isDeploymentStarted={this.state.isDeploymentStarted}/>
             </Wizard>
         )
     }

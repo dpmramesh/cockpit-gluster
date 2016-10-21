@@ -14,7 +14,7 @@ constructor(props) {
         this.runGdeploy = this.runGdeploy.bind(this)
     }
 componentDidMount() {
-   // this.runGdeploy()
+   this.runGdeploy()
 }
 
 gdeployDone(){
@@ -53,7 +53,7 @@ render() {
                     </div>
                 </form>
                 <h2> Gdeploy execution log</h2>
-                <textarea value={this.state.gdeployLog}></textarea>
+                <textarea style={{ width: "100%", "min-height": "300px"}} value={this.state.gdeployLog}></textarea>
         </div>
     )
 }

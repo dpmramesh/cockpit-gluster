@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 
 class Wizard extends Component {
-    displayName: "Wizard"
     propTypes: {
         title: React.PropTypes.string.isRequired
     }
@@ -21,6 +20,9 @@ class Wizard extends Component {
     }
     componentDidMount() {
         $(ReactDOM.findDOMNode(this)).modal('show')
+    }
+    componentWillUnmount() {
+        $(ReactDOM.findDOMNode(this)).modal('hide')
     }
     cancel() {
         this.setState(

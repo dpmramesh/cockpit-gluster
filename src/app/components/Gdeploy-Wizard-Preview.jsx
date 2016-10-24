@@ -1,4 +1,5 @@
 var React = require('react');
+var ini = require('ini');
 import WizardExecutionStep from './Gdeploy-Wizard-Execution.jsx'
 var gdeployConfigUtil = require('../utils/gdeployConfigUtil');
 
@@ -9,24 +10,38 @@ class WizardPreviewStep extends React.Component {
             gdeployConfig: ""
         }
         this.componentDidMount = this.componentDidMount.bind(this)
+        this.createGdeployConfig = this.createGdeployConfig.bind(this)
     }
+
+    createGdeployConfig(templatePath, gdeployModel, configFilePath) {
+        var that = this
+        gdeployConfigUtil.readIniFile(templatePath).done(function (template) {
+            if (template != null) {
+                var configTemplate = ini.parse(template)
+                var gdeployConfig = gdeployConfigUtil.createGdeployConfig(gdeployModel, configTemplate, configFilePath)
+                //TODO - Need to create answers file hosted-engine deployment
+                that.setState({ gdeployConfig: gdeployConfig })
+            }
+        })
+    }
+
     componentDidMount() {
-        var glusterModel = this.props.glusterModel
-        var gdeployConfig = gdeployConfigUtil.createGdeployConfig(glusterModel, '/tmp/gdeployConfig.conf')
-        //TODO - Need to create answers file hosted-engine deployment
-        //TODO - Start gdeploy execution immediatly after the config file creation
-        this.setState(
-            { gdeployConfig: gdeployConfig }
-        )
+        this.createGdeployConfig(this.props.templatePath, this.props.glusterModel, this.props.configFilePath);
     }
+
     render() {
         if (this.props.isDeploymentStarted) {
-            return <WizardExecutionStep/>
+            return <WizardExecutionStep configFilePath={this.props.configFilePath} onSuccess={this.props.onSuccess} />
         } else {
             return (
                 <div className="col-sm-12">
-                    <h2> Generated Cofig Files</h2>
-                    <textarea style={{ width: "100%", "min-height": "300px" }} value={this.state.gdeployConfig}></textarea>
+                    <div className="panel panel-default">
+                        <div className="panel-heading">
+                            <span className="pficon-settings"></span>
+                            <span>Generated Gdeploy configuration : {this.props.configFilePath}</span>
+                        </div>
+                        <textarea style={{ width: "100%", "minHeight": "225px" }} value={this.state.gdeployConfig}></textarea>
+                    </div>
                 </div>
             )
         }

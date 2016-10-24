@@ -1,64 +1,67 @@
 var React = require('react');
+class HostRow extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return (<tr>
+            <td style={{ width: "50%" }}>
+                <input type="text" className="form-control" value={this.props.host} onChange={this.props.onChange}/>
+            </td>
+            <td style={{ width: "15%" }}>
+                <button className="btn btn-primary" type="button" onClick={this.props.onAdd}>+</button>
+                <button className="btn btn-danger" type="button" onClick={this.props.onDelete}>-</button>
+            </td>
+        </tr>
+        )
+    }
+}
+
 
 class WizardHostStep extends React.Component {
-      
-   constructor(props) {
+
+    constructor(props) {
         super(props);
         this.state = {
-            host1: props.hosts[0],
-            host2: props.hosts[1],
-            host3: props.hosts[2],
+            hosts: props.hosts
         }
-        this.updateHost1 = this.updateHost1.bind(this)
-        this.updateHost2 = this.updateHost2.bind(this)
-        this.updateHost3 = this.updateHost3.bind(this)
-        this.updateHosts = this.updateHosts.bind(this)
+        this.handleDelete = this.handleDelete.bind(this)
+        this.handleAdd = this.handleAdd.bind(this)
+        this.updateHost = this.updateHost.bind(this);
+        if(this.state.hosts.length == 0){
+            this.handleAdd();
+        }  
     }
-    updateHost1(e){
-        this.setState({
-            host1: e.target.value
+    handleDelete(index) {
+        let hosts = this.state.hosts
+        hosts.splice(index, 1);
+        if(hosts.length == 0){
+            this.handleAdd();
+        }else{this.setState({ hosts: hosts })}
+    }
+    handleAdd() {
+        let hosts = this.state.hosts
+        hosts.push("")
+        this.setState({ hosts: hosts })
+    }
+    updateHost(index, e) {
+        let hosts = this.state.hosts;
+        hosts[index] = e.target.value
+        this.setState({ hosts: hosts })
+    }
+    render() {
+        let hostRows = [];
+        let that = this
+        this.state.hosts.forEach(function (host, index, hosts) {
+            hostRows.push(<HostRow host={host} key={index} onDelete={() => that.handleDelete(index) } onChange={that.updateHost.bind(this, index) } onAdd={that.handleAdd}/>)
         })
-        this.props.onupdateHosts([ e.target.value, this.state.host2, this.state.host3])
+        return (
+            <form className="form-horizontal">
+                <table style={{ margin: "auto"}}><tbody>
+                    {hostRows}
+                </tbody></table>
+            </form>
+        )
     }
-    updateHost2(e){
-        this.setState({
-            host2: e.target.value
-        })
-        this.props.onupdateHosts([ this.state.host1, e.target.value, this.state.host3])     
-    }
-    updateHost3(e){
-        this.setState({
-            host3: e.target.value
-        })
-        this.props.onupdateHosts([ this.state.host1, this.state.host2, e.target.value])          
-    }
-    updateHosts(){
-        this.props.onupdateHosts([ this.state.host1, this.state.host2, this.state.host3])
-    }
-    
-render() {
-    return (
-                <form className="form-horizontal">
-                    <div className="form-group">
-                    <label className="col-md-2 control-label">Host1</label>
-                        <div className="col-md-6">
-                            <input type="text" className="form-control" value={this.state.host1} onChange={this.updateHost1}/>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                    <label className="col-md-2 control-label">Host2</label>
-                        <div className="col-md-6">
-                            <input type="text" className="form-control" value={this.state.host2}onChange={this.updateHost2}/>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                    <label className="col-md-2 control-label">Host3</label>
-                        <div className="col-md-6">
-                            <input type="text" className="form-control" value={this.state.host3} onChange={this.updateHost3}/>
-                        </div>
-                    </div>                                        
-                </form>
-    )
-}
 }
 export default WizardHostStep;

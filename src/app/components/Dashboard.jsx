@@ -9,6 +9,7 @@ export default class Dashboard extends React.Component {
     };
     this.startGdeploy = this.startGdeploy.bind(this)
     this.onGdeployClose = this.onGdeployClose.bind(this)
+    this.OnGdeployComplete = this.OnGdeployComplete.bind(this);
   }
   startGdeploy() {
     this.setState({
@@ -20,10 +21,13 @@ export default class Dashboard extends React.Component {
       gdeployWizardShown: false
     })
   }
+  OnGdeployComplete(msg) {
+     cockpit.jump("/ovirt-dashboard#/he")
+  }
   render() {
     return (
       <div>
-      {this.state.gdeployWizardShown && <GdeploySetup onClose={this.onGdeployClose}/>}
+      {this.state.gdeployWizardShown && <GdeploySetup onClose={this.onGdeployClose} onSuccess={this.OnGdeployComplete} />}
       <div className="curtains curtains-ct blank-slate-pf">
         <div className="container-center">
           <div className="blank-slate-pf-icon"><i className="fa fa-database"></i></div>

@@ -17,21 +17,19 @@
     "cockpit"
   ],
   "dependencies": {
-    "babel-core": "~6.10.4",
-    "babel-loader": "~6.2.4",
-    "babel-preset-es2015": "~6.9.0",
-    "babel-preset-react": "~6.11.1",
     "classnames": "^2.2.3",
     "history": "^2.0.1",
     "ini": "1.3.4",
-    "react": "~15.3.2",
-    "react-addons-update": "^15.3.2",
-    "react-dom": "~15.3.2",
-    "react-router": "^2.5.2",
-    "webpack": "~1.13.1",
-    "xml2js": "^0.4.17"
+    "react": "^0.14.8",
+    "react-addons-update": "^0.14.8",
+    "react-dom": "^0.14.8",
+    "react-router": "^2.0.1"
   },
   "devDependencies": {
+    "babel-core": "~6.4.5",
+    "babel-loader": "~6.2.4",
+    "babel-preset-es2015": "~6.9.0",
+    "babel-preset-react": "~6.11.1",
     "clean-webpack-plugin": "^0.1.10",
     "copy-webpack-plugin": "^3.0.1",
     "patternfly": "^3.2.0",
@@ -39,7 +37,8 @@
     "file-loader": "^0.8.5",
     "css-loader": "^0.23.1",
     "sass-loader": "",
-    "style-loader": "^0.13.0"
+    "style-loader": "^0.13.0",
+    "webpack": "~1.13.1"
   },
   "author": "Ramesh Nachimuthu",
   "license": "Apache-2.0",
